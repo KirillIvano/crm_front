@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "removeComments": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "jsx": "react",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "~vars/*": ["src/vars/*.less"]
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+  ],
+}
