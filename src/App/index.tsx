@@ -1,34 +1,42 @@
 import {Component} from 'react';
 import {Layout, Menu} from 'antd';
+import {Link} from 'react-router-dom';
 import {
     UserOutlined,
     VideoCameraOutlined,
     UploadOutlined,
 } from '@ant-design/icons';
-import {Link} from 'react-router-dom';
+
 import {OrderPages} from '@/pages';
 
-const {Header, Sider, Content} = Layout;
+import styles from './styles.scss';
 
 
-export class App extends Component {
+const {Sider, Content} = Layout;
+export class App extends Component<unknown, {collapsed: boolean}> {
     state = {
         collapsed: false,
     };
 
     toggle = () => {
+        const {collapsed} = this.state;
+
         this.setState({
-            collapsed: !this.state.collapsed,
+            collapsed: !collapsed,
         });
     };
 
     render = () => {
+        const {collapsed} = this.state;
+
         return (
             <Layout>
-                <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
+                <Sider trigger={null} collapsible collapsed={collapsed}>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                         <Menu.Item key="1" icon={<UserOutlined />}>
-                            nav 1
+                            <Link to="/order/create">
+                                nav 1
+                            </Link>
                         </Menu.Item>
                         <Menu.Item key="2" icon={<VideoCameraOutlined />}>
                             nav 2
@@ -38,9 +46,8 @@ export class App extends Component {
                         </Menu.Item>
                     </Menu>
                 </Sider>
-                <Layout>
+                <Layout className={styles.content}>
                     <Content
-                        className="site-layout-background"
                         style={{
                             margin: '24px 16px',
                             padding: 24,

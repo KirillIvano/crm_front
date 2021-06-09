@@ -2,7 +2,6 @@ import React from 'react';
 import {useHistory} from 'react-router-dom';
 import {FormProvider, useForm} from 'react-hook-form';
 
-import {DataType} from '@/admin-lib/util/dataType';
 import {useAdminContext} from '@/admin-lib/hooks/useAdminContext';
 import {useQueryClient} from 'react-query';
 
@@ -15,7 +14,6 @@ export type EnhanceDataBeforeSend = <
 export type AdminFormProps = {
     action: string;
     method: 'GET' | 'PUT' | 'POST' | 'DELETE';
-    dataType: DataType;
     children: React.ReactNode;
 
     redirectTo?: string;
@@ -26,7 +24,7 @@ export type AdminFormProps = {
     enhanceBeforeSend?: EnhanceDataBeforeSend;
 
     invalidate?: string | string[];
-    requestParams?: Omit<RequestInit, 'body' | 'method' | 'headers'>;
+    requestParams?: Omit<RequestInit, 'body' | 'method'>;
 }
 
 const AdminForm = ({

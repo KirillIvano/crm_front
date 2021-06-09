@@ -4,42 +4,35 @@ import {AdminForm, AdminInput} from '@/admin-lib/components';
 import {getApiUrl} from '@/utils/getApiUrl';
 
 
-export type AdminInputProps = {
-    name: string;
-    type?: HTMLInputElement['type'];
-}
+const OrderCreate = () => (
+    <AdminForm
+        action={getApiUrl('/order')}
+        method="POST"
+        invalidate={getApiUrl('/order/all')}
+        redirectTo="/order"
+    >
+        <Typography>Создание продукта для категории #</Typography>
 
-const OrderCreate = () => {
+        <AdminInput
+            type="number"
+            name="customerId"
+            required
+        />
 
-    return (
-        <AdminForm
-            action={getApiUrl('/order')}
-            invalidate={getApiUrl('/order/all')}
-            method="POST"
-            dataType="json"
-            requestParams={{mode: 'no-cors'}}
+        <AdminInput
+            type="number"
+            name="userId"
+            required
+        />
+
+        <Button
+            type="primary"
+            htmlType="submit"
         >
-            <Typography>Создание продукта для категории #</Typography>
-
-            <AdminInput
-                type="number"
-                name="customerId"
-            />
-
-            <AdminInput
-                type="number"
-                name="userId"
-            />
-
-            <Button
-                type="primary"
-                htmlType="submit"
-            >
                 Подтвердить
-            </Button>
-        </AdminForm>
-    );
-};
+        </Button>
+    </AdminForm>
+);
 
 
 export default OrderCreate;

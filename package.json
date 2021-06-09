@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hookform/error-message": "^2.0.0",
     "antd": "^4.7.2",
     "classnames": "^2.2.6",
     "focus-visible": "^5.2.0",
