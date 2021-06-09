@@ -14,6 +14,7 @@ const OrderCreate = () => {
     return (
         <AdminForm
             action={getApiUrl('/order')}
+            invalidate={getApiUrl('/order/all')}
             method="POST"
             dataType="json"
             requestParams={{mode: 'no-cors'}}

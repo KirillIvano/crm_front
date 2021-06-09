@@ -50,7 +50,7 @@ const AdminForm = ({
     const {handleSubmit} = formApi;
 
     const {request} = useAdminContext();
-    const {invalidateQueries} = useQueryClient();
+    const queryClient = useQueryClient();
 
     const prepareData = (values: Record<string, unknown>) =>
         enhanceBeforeSend ? enhanceBeforeSend(values) : values;
@@ -71,7 +71,7 @@ const AdminForm = ({
             onSuccess?.();
 
             redirectTo && history.push(redirectTo);
-            invalidate && invalidateQueries(invalidate);
+            invalidate && queryClient.invalidateQueries(invalidate);
         } catch (e) {
             onError?.(e);
         }

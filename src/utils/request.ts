@@ -9,7 +9,7 @@ export const request = async <T extends Record<string, unknown> = Record<string,
 ): Promise<ResponseType<T>> => {
     const res = await fetch(url, options);
 
-    const body = await res.json();
+    const body = await res.json().catch(() => ({}));
 
     return {
         data: body as T,
