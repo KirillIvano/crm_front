@@ -1,6 +1,7 @@
 const {merge} = require('webpack-merge');
 const path = require('path');
 const webpack = require('webpack');
+const AntScss = require('antd-scss-theme-plugin');
 
 const common = require('./webpack.config');
 
@@ -20,7 +21,10 @@ const dev = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.DefinePlugin({}),
+        new webpack.DefinePlugin({
+            __SERVER_ORIGIN__: '"https://golangcrm.herokuapp.com"',
+        }),
+        new AntScss(),
     ],
     module: {
         rules: [

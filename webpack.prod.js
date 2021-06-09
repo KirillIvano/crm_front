@@ -2,7 +2,7 @@ const {merge} = require('webpack-merge');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserJs = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ImageminPlugin = require('imagemin-webpack');
+const AntScss = require('antd-scss-theme-plugin');
 const webpack = require('webpack');
 
 const commonConfig = require('./webpack.config');
@@ -28,6 +28,7 @@ const prodConfigs = {
     plugins: [
         new MiniCssExtractPlugin({}),
         new webpack.DefinePlugin({}),
+        new AntScss(),
     ],
     module: {
         rules: [
@@ -59,7 +60,7 @@ const prodConfigs = {
                     },
                     {
                         loader: 'sass-loader',
-                    }
+                    },
                 ],
             }, 
             {

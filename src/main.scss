@@ -1,0 +1,36 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+body {
+    font-family: 'PT Sans', sans-serif;
+}
+
+li {
+    list-style: none;
+}
+
+button {
+    border: none;
+}
+
+label {
+    cursor: pointer;
+}
+
+:global(.js-focus-visible) :focus {
+    outline: 2px solid blue;
+}
+
+:global(.js-focus-visible) :focus:not(:global(.focus-visible)) {
+    outline: none;
+}
