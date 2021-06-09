@@ -40,7 +40,6 @@ const AdminForm = ({
     // enhanceDataBeforeSend,
 
     requestParams={},
-    // validation,
 }: AdminFormProps) => {
     const history = useHistory();
     const {request} = useAdminContext();
