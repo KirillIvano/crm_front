@@ -58,22 +58,22 @@ const AdminForm = ({
     const submitHandler = async (values: Record<string, unknown>) => {
         const data = prepareData(values);
 
-        const res = await request(
-            action,
-            {
-                method,
-                body: JSON.stringify(data),
-                ...requestParams,
-            },
-        );
+        try {
+            await request(
+                action,
+                {
+                    method,
+                    body: JSON.stringify(data),
+                    ...requestParams,
+                },
+            );
 
-        if (res.ok) {
             onSuccess?.();
 
             redirectTo && history.push(redirectTo);
             invalidate && invalidateQueries(invalidate);
-        } else {
-            onError?.(res.error);
+        } catch (e) {
+            onError?.(e);
         }
     };
 
