@@ -1,11 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useHistory} from 'react-router-dom';
 import {FormProvider, useForm} from 'react-hook-form';
 
 import {DataType} from '@/admin-lib/util/dataType';
 import {useAdminContext} from '@/admin-lib/hooks/useAdminContext';
-import {FormValidators} from '@/admin-lib/types/form';
-import {useMutation, useQueryClient} from 'react-query';
+import {useQueryClient} from 'react-query';
 
 
 export type EnhanceDataBeforeSend = <
@@ -22,27 +21,25 @@ export type AdminFormProps = {
     redirectTo?: string;
     className?: string;
 
-    // onSuccess?: () => void;
-    // onError?: (error: string) => void;
-    // onSubmit?: (data: FormData) => void;
+    onSuccess?: () => void;
+    onError?: (error: string) => void;
     enhanceBeforeSend?: EnhanceDataBeforeSend;
 
+    invalidate?: string | string[];
     requestParams?: Omit<RequestInit, 'body' | 'method' | 'headers'>;
-    validators?: FormValidators;
 }
 
 const AdminForm = ({
     action,
+    invalidate,
     method,
-    dataType,
     children,
 
     redirectTo,
     className,
 
-    // onSuccess,
-    // onError,
-    // onSubmit,
+    onSuccess,
+    onError,
     enhanceBeforeSend,
 
     requestParams={},
@@ -55,14 +52,29 @@ const AdminForm = ({
     const {request} = useAdminContext();
     const {invalidateQueries} = useQueryClient();
 
+    const prepareData = (values: Record<string, unknown>) =>
+        enhanceBeforeSend ? enhanceBeforeSend(values) : values;
+
     const submitHandler = async (values: Record<string, unknown>) => {
-        let data = values;
+        const data = prepareData(values);
 
-        if (enhanceBeforeSend) {
-            data = enhanceBeforeSend(values);
+        const res = await request(
+            action,
+            {
+                method,
+                body: JSON.stringify(data),
+                ...requestParams,
+            },
+        );
+
+        if (res.ok) {
+            onSuccess?.();
+
+            redirectTo && history.push(redirectTo);
+            invalidate && invalidateQueries(invalidate);
+        } else {
+            onError?.(res.error);
         }
-
-        console.log(data);
     };
 
     return (
