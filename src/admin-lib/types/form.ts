@@ -1,16 +1,3 @@
-export type Validator<TVal,> = {value: TVal; message?: string} | TVal;
+import {RegisterOptions} from 'react-hook-form';
 
-export type RequiredValidator = Validator<boolean>;
-export type PatternValidator = Validator<RegExp>;
-export type ValidateValidator = Validator<(value: string) => boolean>;
-
-export type FieldValidators = {
-    required?: RequiredValidator,
-    pattern?: PatternValidator,
-    validate?: ValidateValidator;
-}
-
-export type FormValidators<TBody = Record<string, string | Blob>> = Record<
-    keyof TBody,
-    FieldValidators
->;
+export type FormValidators = Record<string, RegisterOptions>

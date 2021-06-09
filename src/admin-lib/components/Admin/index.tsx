@@ -1,7 +1,8 @@
 import React from 'react';
 
 import {RequestProvider} from '@/admin-lib/types/requests';
-import {RequestsContext} from '@/admin-lib/contexts/RequestsContext';
+import {AdminContext} from '@/admin-lib/contexts/AdminContext';
+import {useMemo} from 'react';
 
 
 type AdminProps = {
@@ -12,11 +13,17 @@ type AdminProps = {
 const Admin = ({
     requestProvider,
     children,
-}: AdminProps) => (
-    <RequestsContext.Provider value={requestProvider}>
-        {children}
-    </RequestsContext.Provider>
-);
+}: AdminProps) => {
+    const value = useMemo(
+        () => ({request: requestProvider}),
+        [requestProvider],
+    );
 
+    return (
+        <AdminContext.Provider value={value}>
+            {children}
+        </AdminContext.Provider>
+    );
+};
 
 export default Admin;

@@ -1,46 +1,54 @@
-import React, {useCallback, useMemo} from 'react';
 import {Button, Typography} from 'antd';
 import {Input} from 'antd';
+import {Controller, useController} from 'react-hook-form';
 
 import {AdminForm} from '@/admin-lib/components';
 import {FormValidators} from '@/admin-lib/types/form';
 import {getApiUrl} from '@/utils/getApiUrl';
-import {useFormContext} from '@/admin-lib';
+import {useAdminFormContext} from '@/admin-lib/hooks/useAdminFormContext';
+import {SyntheticEvent} from 'react';
+import {ChangeEventHandler} from 'react';
+import {ChangeEvent} from 'react';
 
 
 export type AdminInputProps = {
     name: string;
-    labelText: string;
-
     type?: HTMLInputElement['type'];
 }
+
+const validation = {required: true};
 
 const AdminInput = ({
     name,
     type,
-    labelText,
 }: AdminInputProps) => {
-    const formContext = useFormContext();
+    const controller = useController({
+        name,
+        rules: {required: true},
+    });
+    const {field} = controller;
 
-    console.log(formContext);
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const {value} = e.target;
+
+        if (type === 'number') {
+            field.onChange(value ? parseInt(value) : '');
+            return;
+        }
+
+        field.onChange(value);
+    };
 
     return (
-        <div>
-            {labelText}
-            <Input name={name} type={type}></Input>
-        </div>
+        <Input
+            {...field}
+
+            onChange={onChange}
+            name={name}
+            type={type}
+        ></Input>
     );
 };
-
-const PRODUCT_CREATE_VALIDATORS: FormValidators = {
-    name: {required: true},
-    image: {required: true},
-    certificate: {required: true},
-    shortDescription: {required: true},
-    price: {required: true},
-};
-
-const items = [{productId: 1, quantity: 10}, {productId: 2, quantity: 20}];
 
 const OrderCreate = () => {
 
@@ -50,21 +58,15 @@ const OrderCreate = () => {
             method="POST"
             dataType="json"
             requestParams={{mode: 'no-cors'}}
-            onError={console.log}
-            onSuccess={console.log}
-
-            validators={PRODUCT_CREATE_VALIDATORS}
         >
             <Typography>Создание продукта для категории #</Typography>
 
             <AdminInput
-                labelText="customer id"
                 type="number"
                 name="customerId"
             />
 
             <AdminInput
-                labelText="user id"
                 type="number"
                 name="userId"
             />
