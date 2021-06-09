@@ -5,9 +5,15 @@ import {FormProvider, useForm} from 'react-hook-form';
 import {DataType} from '@/admin-lib/util/dataType';
 import {useAdminContext} from '@/admin-lib/hooks/useAdminContext';
 import {FormValidators} from '@/admin-lib/types/form';
+import {useMutation, useQueryClient} from 'react-query';
 
 
-type AdminFormProps = {
+export type EnhanceDataBeforeSend = <
+    TIn extends Record<string, unknown>,
+    TOut extends Record<string, unknown>
+>(data: TIn) => TOut
+
+export type AdminFormProps = {
     action: string;
     method: 'GET' | 'PUT' | 'POST' | 'DELETE';
     dataType: DataType;
@@ -19,7 +25,7 @@ type AdminFormProps = {
     // onSuccess?: () => void;
     // onError?: (error: string) => void;
     // onSubmit?: (data: FormData) => void;
-    // enhanceDataBeforeSend?: (data: FormData) => FormData;
+    enhanceBeforeSend?: EnhanceDataBeforeSend;
 
     requestParams?: Omit<RequestInit, 'body' | 'method' | 'headers'>;
     validators?: FormValidators;
@@ -37,17 +43,26 @@ const AdminForm = ({
     // onSuccess,
     // onError,
     // onSubmit,
-    // enhanceDataBeforeSend,
+    enhanceBeforeSend,
 
     requestParams={},
 }: AdminFormProps) => {
     const history = useHistory();
-    const {request} = useAdminContext();
+
     const formApi = useForm();
     const {handleSubmit} = formApi;
 
+    const {request} = useAdminContext();
+    const {invalidateQueries} = useQueryClient();
+
     const submitHandler = async (values: Record<string, unknown>) => {
-        console.log(values);
+        let data = values;
+
+        if (enhanceBeforeSend) {
+            data = enhanceBeforeSend(values);
+        }
+
+        console.log(data);
     };
 
     return (

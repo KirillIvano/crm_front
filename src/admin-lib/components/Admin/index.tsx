@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useMemo} from 'react';
+import {QueryClient, QueryClientProvider} from 'react-query';
 
 import {RequestProvider} from '@/admin-lib/types/requests';
 import {AdminContext} from '@/admin-lib/contexts/AdminContext';
-import {useMemo} from 'react';
 
 
 type AdminProps = {
@@ -18,10 +18,14 @@ const Admin = ({
         () => ({request: requestProvider}),
         [requestProvider],
     );
+    // TODO: useConst
+    const queryClient = useMemo(() => new QueryClient(), []);
 
     return (
         <AdminContext.Provider value={value}>
-            {children}
+            <QueryClientProvider client={queryClient}>
+                {children}
+            </QueryClientProvider>
         </AdminContext.Provider>
     );
 };
