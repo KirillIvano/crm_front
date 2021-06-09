@@ -1,12 +1,13 @@
-export type ResponseType<TData extends Record<string, unknown | unknown[]>,> = {
-    ok: true,
+type DefaultResponseData = Record<string, unknown | unknown[]> | unknown[];
+
+export type ResponseType<TData = DefaultResponseData,> = {
+    status: number,
     data: TData
-} | {
-    ok: false,
-    error: string
 }
 
-export interface RequestProvider {
-    request: <TRes extends Record<string, unknown | unknown[]>,>(url: string, options?: RequestInit) =>
-        Promise<ResponseType<TRes>>;
-}
+export type RequestProvider = <
+    TRes extends Record<string, unknown | unknown[]>
+>(
+    url: string,
+    options?: RequestInit
+) => Promise<ResponseType<TRes>>;

@@ -1,128 +1,89 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useHistory} from 'react-router-dom';
+import {FormProvider, useForm} from 'react-hook-form';
 
-import {DataType} from '@/admin-lib/util/dataType';
-import {formDataToJson} from '@/admin-lib/util/formDataToJson';
-import {WithFormContext} from '@/admin-lib/contexts/FormContext';
-import {useFormErrors} from '@/admin-lib/hooks/useFormErrors';
-import {useRequestsContext} from '@/admin-lib/hooks/useRequestsContext';
-import {FormValidators} from '@/admin-lib/types/form';
-
-import {filterRequestParams} from './helpers/filterRequestParams';
-import {getHeadersFromDataType} from './helpers/getHeadersFromDataType';
-import {getFormErrors} from './helpers/getFormErrors';
-import {getFormDataFromForm} from './helpers/getFormDataFromForm';
+import {useAdminContext} from '@/admin-lib/hooks/useAdminContext';
+import {useQueryClient} from 'react-query';
 
 
-type AdminFormProps = {
+export type EnhanceDataBeforeSend = <
+    TIn extends Record<string, unknown>,
+    TOut extends Record<string, unknown>
+>(data: TIn) => TOut
+
+export type AdminFormProps = {
     action: string;
     method: 'GET' | 'PUT' | 'POST' | 'DELETE';
-    dataType: DataType;
     children: React.ReactNode;
 
     redirectTo?: string;
     className?: string;
-    authRequired?: boolean;
 
     onSuccess?: () => void;
     onError?: (error: string) => void;
-    onSubmit?: (data: FormData) => void;
-    enhanceDataBeforeSend?: (data: FormData) => FormData;
+    enhanceBeforeSend?: EnhanceDataBeforeSend;
 
-    requestParams?: Omit<RequestInit, 'body' | 'method' | 'headers'>;
-    validators?: FormValidators;
+    invalidate?: string | string[];
+    requestParams?: Omit<RequestInit, 'body' | 'method'>;
 }
 
 const AdminForm = ({
     action,
+    invalidate,
     method,
     children,
-    dataType,
 
     redirectTo,
     className,
 
     onSuccess,
     onError,
-    onSubmit,
-    enhanceDataBeforeSend,
+    enhanceBeforeSend,
 
     requestParams={},
-    validators,
 }: AdminFormProps) => {
     const history = useHistory();
-    const {errors, setErrors, clearErrors} = useFormErrors();
-    const [isFormDisabled, setFormDisabled] = useState(false);
 
-    const {request} = useRequestsContext();
+    const formApi = useForm();
+    const {handleSubmit} = formApi;
 
-    const prepareBodyForSending = (body: FormData): string | FormData => {
-        const enhancedBody = enhanceDataBeforeSend ? enhanceDataBeforeSend(body) : body;
-        const jsonBody = dataType === 'json' ? formDataToJson(enhancedBody) : enhancedBody;
+    const {request} = useAdminContext();
+    const queryClient = useQueryClient();
 
-        return jsonBody;
-    };
+    const prepareData = (values: Record<string, unknown>) =>
+        enhanceBeforeSend ? enhanceBeforeSend(values) : values;
 
-    const performRequest = async (data: FormData) => {
-        const body = prepareBodyForSending(data);
-        const headers = getHeadersFromDataType(dataType);
+    const submitHandler = async (values: Record<string, unknown>) => {
+        const data = prepareData(values);
 
-        const filteredParams = filterRequestParams(requestParams);
+        try {
+            await request(
+                action,
+                {
+                    method,
+                    body: JSON.stringify(data),
+                    ...requestParams,
+                },
+            );
 
-        setFormDisabled(true);
+            onSuccess?.();
 
-        const res = await request(
-            action,
-            {
-                method,
-                headers,
-                body,
-
-                ...filteredParams,
-            },
-        );
-
-        setFormDisabled(false);
-
-        if (!res.ok) {
-            onError && onError(res.error);
-        } else {
-            onSuccess && onSuccess();
             redirectTo && history.push(redirectTo);
-        }
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const body = getFormDataFromForm(e.currentTarget);
-
-        onSubmit && onSubmit(body);
-
-        const errors = validators ? getFormErrors(body, validators) : null;
-
-        if (errors && Object.keys(errors).length) {
-            setErrors(errors);
-        } else {
-            clearErrors();
-            performRequest(body);
+            invalidate && queryClient.invalidateQueries(invalidate);
+        } catch (e) {
+            onError?.(e);
         }
     };
 
     return (
-        <form
-            className={className}
-            onSubmit={handleSubmit}
-        >
-            <WithFormContext
-                errors={errors}
-                validators={validators}
-                isFormDisabled={isFormDisabled}
-                isSubmitFailed={false}
+        <FormProvider {...formApi}>
+            <form
+                className={className}
+                onSubmit={handleSubmit(submitHandler)}
             >
                 {children}
-            </WithFormContext>
-        </form>
+            </form>
+        </FormProvider>
     );
 };
 

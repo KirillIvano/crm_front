@@ -10,11 +10,11 @@ import {App} from './App';
 import {request} from './utils/request';
 
 
-const ADMIN_PARAMS = {request};
+const REQUST_PROVIDER = request;
 
 render(
     <BrowserRouter>
-        <Admin requestProvider={ADMIN_PARAMS}>
+        <Admin requestProvider={REQUST_PROVIDER}>
             <App />
         </Admin>
     </BrowserRouter>,
