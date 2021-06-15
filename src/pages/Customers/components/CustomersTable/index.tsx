@@ -1,14 +1,17 @@
 import {Spin, Table, Typography} from 'antd';
+import {ColumnsType} from 'antd/lib/table';
 
 import {getApiUrl} from '@/utils/getApiUrl';
 import {ResponseType} from '@/admin-lib/types/requests';
 import {useAuthenticatedData} from '@/hooks/useAuthenticatedData';
 import {CustomerPreview} from '@/domain/customer/types';
 
+import {CustomerDeleteBtn} from '../CustomerDeleteBtn';
+
 
 const {Title} = Typography;
 
-const COLUMNS = [
+const COLUMNS: ColumnsType<CustomerPreview> = [
     {
         title: 'Идентификатор покупателя',
         dataIndex: 'id',
@@ -16,6 +19,13 @@ const COLUMNS = [
     {
         title: 'Имя покупателя',
         dataIndex: 'name',
+    },
+    {
+        title: '',
+        dataIndex: '',
+        fixed: 'right',
+        // eslint-disable-next-line react/display-name
+        render: ({id}: {id: number}) => <CustomerDeleteBtn customerId={id} />,
     },
 ];
 
