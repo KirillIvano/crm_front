@@ -9,11 +9,11 @@ import {useAuthenticatedData} from '@/hooks/useAuthenticatedData';
 
 const COLUMNS: ColumnsType<OrderPreview> = [
     {
-        title: 'Идентификатор записи',
+        title: 'ID заказа',
         dataIndex: 'id',
     },
     {
-        title: 'Идентификатор покупателя',
+        title: 'ID покупателя',
         dataIndex: 'customerId',
     },
     {

@@ -40,7 +40,9 @@ const CustomerSuggestions = ({
 
     onSelect,
 }: CustomerSuggestionsProps) => {
-    const {data, isLoading} = useAuthenticatedData<ResponseType<CustomerPreview[]>>(getApiUrl('/customer/all'));
+    const {data, isLoading} = useAuthenticatedData<ResponseType<CustomerPreview[]>>(
+        getApiUrl('/customer/all'),
+    );
 
     if (isLoading || !data) return <Spin size="large" />;
 

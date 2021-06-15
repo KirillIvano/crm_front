@@ -1,4 +1,4 @@
-import {Spin} from 'antd';
+import {Spin, Space} from 'antd';
 
 import {getApiUrl} from '@/utils/getApiUrl';
 import {ResponseType} from '@/admin-lib/types/requests';
@@ -6,7 +6,7 @@ import {useAuthenticatedData} from '@/hooks/useAuthenticatedData';
 import {OrderInfo} from '@/domain/order/types';
 
 import {useOrderId} from '../hooks/useProductId';
-import {CustomerSuggestions} from '../components';
+import {DeleteOrder} from '../components';
 
 
 const OrderShow = () => {
@@ -24,7 +24,9 @@ const OrderShow = () => {
             <p>ID: {id}</p>
             <p>Status: {status}</p>
 
-            <CustomerSuggestions onSelect={console.log} />
+            <Space size={12}>
+                <DeleteOrder orderId={orderId} />
+            </Space>
         </div>
     );
 };

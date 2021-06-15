@@ -1,11 +1,11 @@
 import {useState} from 'react';
 import cn from 'classnames';
+import {useFormContext, useWatch} from 'react-hook-form';
 
 import {Input} from '@/uikit';
 import {CustomerSuggestions} from '@/pages/Order/components';
 
 import styles from './styles.scss';
-import {useFormContext, useWatch} from 'react-hook-form';
 
 
 export const CustomerInput = () => {
@@ -14,16 +14,22 @@ export const CustomerInput = () => {
 
     const [areSuggestionsVisible, setSuggestionsVisible] = useState(false);
 
-    const showConditions = () => setSuggestionsVisible(true);
-    const hideConditions = () => setSuggestionsVisible(false);
+    const showSuggestions = () => setSuggestionsVisible(true);
+    const hideSuggestions = () => setSuggestionsVisible(false);
+    const handleSelect = (id: string) => {
+        setValue('customerId', parseInt(id));
+        hideSuggestions();
+    };
 
     return (
         <div className={styles.customerInputContainer}>
             <Input
-                type="number"
+                label="ID покупателя"
+                type="text"
                 name="customerId"
-                onFocus={showConditions}
-                onBlur={hideConditions}
+                onFocus={showSuggestions}
+                onBlur={hideSuggestions}
+                autoComplete="off"
             />
 
             <CustomerSuggestions
@@ -32,7 +38,7 @@ export const CustomerInput = () => {
                     {[styles.hidden]: !areSuggestionsVisible},
                 )}
                 search={customerId}
-                onSelect={id => setValue('customerId', parseInt(id))}
+                onSelect={handleSelect}
             />
         </div>
     );
