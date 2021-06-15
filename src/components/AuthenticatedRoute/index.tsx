@@ -17,7 +17,7 @@ const AuthenticatedRoute = observer((props: AuthenticatedRouteProps) => {
             history.push(`/login?from=${history.location.pathname}`);
             notification.info({message: 'Необходимо войти в систему'});
         }
-    }, [history, authStore]);
+    }, [history, authStore.authorized]);
 
     if (!authStore.authorized) return null;
 

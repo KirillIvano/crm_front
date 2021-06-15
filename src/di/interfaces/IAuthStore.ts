@@ -2,7 +2,10 @@ import {RequestProvider} from '@/admin-lib/types/requests';
 
 export interface IAuthStore {
     authorized: boolean;
-    request: RequestProvider;
+    initialAuthChecked: boolean;
 
+    request: RequestProvider;
     authorize(): void;
+    logout(): void;
+    ping(): void;
 }

@@ -3,11 +3,15 @@ import {observable, makeObservable, action} from 'mobx';
 import {request} from '@/utils/request';
 import {AdminRequestInit, RequestProvider} from '@/admin-lib/types/requests';
 import {IAuthStore} from '@/di/interfaces/IAuthStore';
+import {getApiUrl} from '@/utils/getApiUrl';
 
 
 export class AuthStore implements IAuthStore {
     @observable
-    authorized: boolean;
+    authorized = false;
+
+    @observable
+    initialAuthChecked = false;
 
     constructor() {
         makeObservable(this);
@@ -19,8 +23,21 @@ export class AuthStore implements IAuthStore {
     }
 
     @action
+    logout() {
+        this.authorized = false;
+    }
+
+    @action
     authorize() {
         this.authorized = true;
+    }
+
+    @action
+    ping = async () => {
+        const {status} = await this.request(getApiUrl('/ping'), {credentials: 'include'});
+
+        this.authorized = status < 400;
+        this.initialAuthChecked = true;
     }
 
     @action

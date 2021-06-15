@@ -1,14 +1,15 @@
-import {Spin, Table, Typography} from 'antd';
+import {Spin, Table} from 'antd';
+import {ColumnsType} from 'antd/lib/table';
 
 import {getApiUrl} from '@/utils/getApiUrl';
 import {ResponseType} from '@/admin-lib/types/requests';
 import {ProductPreview} from '@/domain/product/types';
 import {useAuthenticatedData} from '@/hooks/useAuthenticatedData';
 
+import {ProductDeleteBtn} from '../ProductDelete';
 
-const {Title} = Typography;
 
-const COLUMNS = [
+const COLUMNS: ColumnsType<ProductPreview> = [
     {
         title: 'Идентификатор продукта',
         dataIndex: 'id',
@@ -21,6 +22,13 @@ const COLUMNS = [
         title: 'Цена продукта, ₽',
         dataIndex: 'price',
     },
+    {
+        title: '',
+        dataIndex: '',
+        fixed: 'right',
+        // eslint-disable-next-line react/display-name
+        render: ({id}: {id: number}) => <ProductDeleteBtn productId={id} />,
+    },
 ];
 
 const ProductsTable = () => {
@@ -29,10 +37,7 @@ const ProductsTable = () => {
     if (isLoading || !data) return <Spin />;
 
     return (
-        <div>
-            <Title level={1}>Продукты</Title>
-            <Table columns={COLUMNS} dataSource={data.data} size="small" />
-        </div>
+        <Table columns={COLUMNS} dataSource={data.data} size="small" />
     );
 };
 

@@ -1,9 +1,10 @@
-import {Layout, Menu} from 'antd';
+import {Layout, Menu, Spin} from 'antd';
 import {
     UsergroupAddOutlined,
     FileTextOutlined,
     AppstoreAddOutlined,
 } from '@ant-design/icons';
+import {useEffect} from 'react';
 
 import {
     Link,
@@ -12,15 +13,18 @@ import {
     useLocation,
     Route,
 } from 'react-router-dom';
+import {observer} from 'mobx-react-lite';
 
 import {CustomerPages, OrderPages, ProductPages} from '@/pages';
 import {AuthenticatedRoute} from '@/components';
 import Login from '@/pages/Login';
+import {useAuthStore} from '@/domain/auth/hooks';
+import LogoutButton from '@/components/LogoutButton';
 
 import styles from './styles.scss';
 
 
-const {Sider, Content} = Layout;
+const {Sider, Content, Header} = Layout;
 
 const AppMenu = () => {
     const {pathname} = useLocation();
@@ -29,24 +33,31 @@ const AppMenu = () => {
         <Menu theme="dark" mode="inline" selectedKeys={[pathname]}>
             <Menu.Item key="/order" icon={<FileTextOutlined />}>
                 <Link to="/order">
-                    Order
+                    Заказы
                 </Link>
             </Menu.Item>
             <Menu.Item key="/product" icon={<AppstoreAddOutlined />}>
                 <Link to="/product">
-                    Product
+                    Товары
                 </Link>
             </Menu.Item>
             <Menu.Item key="/customer" icon={<UsergroupAddOutlined />}>
                 <Link to="/customer">
-                    User
+                    Покупатели
                 </Link>
             </Menu.Item>
         </Menu>
     );
 };
 
-export const App = () => {
+export const App = observer(() => {
+    const authStore = useAuthStore();
+
+    useEffect(() => {
+        authStore.ping();
+    }, [authStore]);
+
+    if (!authStore.initialAuthChecked) return <Spin size="large" />;
 
     return (
         <Layout>
@@ -54,6 +65,9 @@ export const App = () => {
                 <AppMenu />
             </Sider>
             <Layout className={styles.content}>
+                <Header className={styles.header}>
+                    <LogoutButton />
+                </Header>
                 <Content
                     style={{
                         margin: '24px 16px',
@@ -72,4 +86,4 @@ export const App = () => {
             </Layout>
         </Layout>
     );
-};
+});

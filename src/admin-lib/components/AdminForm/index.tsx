@@ -13,7 +13,7 @@ export type EnhanceDataBeforeSend = <
 
 export type AdminFormProps = {
     action: string;
-    method: 'GET' | 'PUT' | 'POST' | 'DELETE';
+    method: 'GET' | 'PUT' | 'POST' | 'DELETE' | 'PATCH';
     children: React.ReactNode;
 
     redirectTo?: string;

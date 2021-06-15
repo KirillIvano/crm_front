@@ -1,9 +1,14 @@
-import {ProductsTable} from './components';
+import {Route, Switch} from 'react-router-dom';
 
+import {CreateProduct} from './create';
+import {ProductsMain} from './main';
 
 const ProductPages = () => {
     return (
-        <ProductsTable />
+        <Switch>
+            <Route exact path="/product" component={ProductsMain} />
+            <Route exact path="/product/create" component={CreateProduct} />
+        </Switch>
     );
 };
 

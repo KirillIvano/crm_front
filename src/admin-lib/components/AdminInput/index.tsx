@@ -1,7 +1,7 @@
 import {ChangeEvent, InputHTMLAttributes} from 'react';
 import {RegisterOptions, useController} from 'react-hook-form';
 import {ErrorMessage} from '@hookform/error-message';
-import {useEffect} from 'react';
+
 
 export type CommonValidationProps =
     'min' | 'max' | 'maxLength' | 'pattern' | 'required';
@@ -28,7 +28,7 @@ const AdminInput = ({
         rules: {min, max, maxLength, required, pattern},
     });
     const {field, formState} = controller;
-    const {errors} = formState;
+    const {errors, isSubmitting} = formState;
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         onChange && onChange(e);
@@ -48,7 +48,7 @@ const AdminInput = ({
                 {...props}
 
                 value={field.value ?? ''}
-                required={!!required}
+                disabled={isSubmitting}
                 onChange={handleChange}
                 name={name}
                 type={type}

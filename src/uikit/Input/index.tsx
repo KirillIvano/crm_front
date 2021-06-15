@@ -21,7 +21,7 @@ const Input = ({
 
     return (
         <Comp className={cn(containerClass, styles.container)}>
-            <div>{label}</div>
+            <span className={styles.label}>{label}</span>
 
             <AdminInput
                 {...props}

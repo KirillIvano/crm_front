@@ -21,7 +21,6 @@ const OrdersMain = () => {
             >
                 Создать
             </Button>
-
         </div>
     );
 };
