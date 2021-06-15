@@ -13,10 +13,6 @@ const COLUMNS: ColumnsType<OrderPreview> = [
         dataIndex: 'id',
     },
     {
-        title: 'Идентификатор пользователя',
-        dataIndex: 'userId',
-    },
-    {
         title: 'Идентификатор покупателя',
         dataIndex: 'customerId',
     },
