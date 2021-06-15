@@ -2,9 +2,9 @@ import {Button, Typography} from 'antd';
 
 import {AdminForm} from '@/admin-lib/components';
 import {getApiUrl} from '@/utils/getApiUrl';
-import {Input} from '@/uikit';
 
 import {ProductsField} from './../components';
+import {CustomerInput} from './components/CustomerInput';
 
 
 const OrderCreate = () => (
@@ -18,16 +18,7 @@ const OrderCreate = () => (
         >
             <Typography>Создание заказа</Typography>
 
-            <Input
-                type="number"
-                name="customerId"
-            />
-
-            <Input
-                type="number"
-                name="userId"
-                required
-            />
+            <CustomerInput />
 
             <ProductsField name="items" />
 

@@ -20,7 +20,9 @@ const COLUMNS = [
 ];
 
 const CustomersTable = () => {
-    const {isLoading, data} = useAuthenticatedData<ResponseType<CustomerPreview[]>>(getApiUrl('/product/all'));
+    const {isLoading, data} = useAuthenticatedData<ResponseType<CustomerPreview[]>>(
+        getApiUrl('/customer/all'),
+    );
 
     if (isLoading || !data) return <Spin />;
 

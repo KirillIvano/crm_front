@@ -1,10 +1,9 @@
 .suggestions {
+    max-height: 160px;
+    overflow-y: auto;
+
     width: 300px;
     background: white;
-
-    .suggestionsItem {
-        padding: 6px;
-    }
 
     .placeholder {
         padding: 10px;

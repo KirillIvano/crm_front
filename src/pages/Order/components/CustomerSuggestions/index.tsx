@@ -6,21 +6,39 @@ import {getApiUrl} from '@/utils/getApiUrl';
 import {CustomerPreview} from '@/domain/customer/types';
 import {useAuthenticatedData} from '@/hooks/useAuthenticatedData';
 
+import styles from './styles.scss';
+
+
+export type CustomerSuggestionProps = {
+    onClick?: (item: CustomerPreview) => void;
+} & CustomerPreview;
 
 const CustomerSuggestion = ({
-    name,
-}: CustomerPreview) => (
-    <div>{name}</div>
+    onClick,
+    ...item
+}: CustomerSuggestionProps) => (
+    <button
+        onClick={() => onClick?.(item)}
+        className={styles.customerSuggestion}
+        type="button"
+    >
+        {item.name}
+    </button>
 );
 
 export type CustomerSuggestionsProps = {
+    search: string;
     className?: string;
-    onSelect: (id: number) => void;
+
+    onSelect: (id: string) => void;
 }
 
-const INDEXED_PROPS = ['name' as const];
+const INDEXED_PROPS = ['id' as const];
 const CustomerSuggestions = ({
     className,
+    search,
+
+    onSelect,
 }: CustomerSuggestionsProps) => {
     const {data, isLoading} = useAuthenticatedData<ResponseType<CustomerPreview[]>>(getApiUrl('/customer/all'));
 
@@ -31,6 +49,9 @@ const CustomerSuggestions = ({
             <Suggestions
                 items={data.data}
                 indexedProps={INDEXED_PROPS}
+                search={search}
+
+                onItemSelect={item => onSelect(String(item.id))}
                 component={CustomerSuggestion}
             />
         </div>

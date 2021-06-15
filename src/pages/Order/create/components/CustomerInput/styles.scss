@@ -1,0 +1,20 @@
+.customerInputContainer {
+    position: relative;
+
+    .suggestions {
+        z-index: 1;
+        position: absolute;
+
+        left: 0;
+        top: 100%;
+    }
+
+    .suggestions.hidden {
+        display: none;
+    }
+
+    .suggestions:focus-within,
+    .suggestions:hover {
+        display: block;
+    }
+}

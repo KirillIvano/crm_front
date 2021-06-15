@@ -9,6 +9,8 @@ export type SuggestionsListProps<TItem = Record<string, unknown>> = {
     component: React.FunctionComponent<TItem>;
 
     search: string;
+
+    onItemSelect: (item: TItem) => void;
 }
 
 const Suggestions = <TItem extends Record<string, unknown>,>({
@@ -16,6 +18,8 @@ const Suggestions = <TItem extends Record<string, unknown>,>({
     indexedProps,
     component,
     search,
+
+    onItemSelect,
 }: SuggestionsListProps<TItem>) => {
     const [filteredItems, setFilteredItems] = useState(items);
 
@@ -42,8 +46,14 @@ const Suggestions = <TItem extends Record<string, unknown>,>({
             {filteredItems.length ? (
                 <ul>
                     {filteredItems.map((props, ind) => (
-                        <li key={ind} className={styles.suggestionsItem}>
-                            <Comp {...props} />
+                        <li
+                            key={ind}
+                            className={styles.suggestionsItem}
+                        >
+                            <Comp
+                                onClick={onItemSelect}
+                                {...props}
+                            />
                         </li>
                     ))}
                 </ul>

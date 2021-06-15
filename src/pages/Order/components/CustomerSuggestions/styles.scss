@@ -1,0 +1,15 @@
+.customerSuggestion {
+    width: 100%;
+    display: block;
+    padding: 4px 6px;
+
+    cursor: pointer;
+
+    text-align: start;
+    background: #fefefe;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background: #eee;
+    }
+}
