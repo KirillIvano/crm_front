@@ -12,7 +12,7 @@ const dev = {
         historyApiFallback: true,
         hotOnly: true,
         contentBase: path.resolve(__dirname, 'dist'),
-        port: '8080',
+        port: '5000',
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
@@ -22,7 +22,7 @@ const dev = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
-            __SERVER_ORIGIN__: '"https://golangcrm.herokuapp.com"',
+            __SERVER_ORIGIN__: '"http://golangcrm.herokuapp.com"',
         }),
         new AntScss(),
     ],

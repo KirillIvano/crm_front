@@ -18,11 +18,14 @@ const Admin = ({
         () => ({request: requestProvider}),
         [requestProvider],
     );
-    // TODO: useConst
+
     const queryClient = useMemo(() => new QueryClient({
         defaultOptions: {
             queries: {
-                queryFn: ({queryKey}) => requestProvider(queryKey[0] as string),
+                queryFn: ({queryKey}) =>
+                    requestProvider(
+                        queryKey[0] as string,
+                    ),
             },
         },
     }), [requestProvider]);

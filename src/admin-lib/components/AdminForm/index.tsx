@@ -1,6 +1,6 @@
 import React from 'react';
 import {useHistory} from 'react-router-dom';
-import {FormProvider, useForm} from 'react-hook-form';
+import {DefaultValues, FormProvider, useForm} from 'react-hook-form';
 
 import {useAdminContext} from '@/admin-lib/hooks/useAdminContext';
 import {useQueryClient} from 'react-query';
@@ -20,9 +20,11 @@ export type AdminFormProps = {
     className?: string;
 
     onSuccess?: () => void;
-    onError?: (error: string) => void;
+    onError?: (status: number) => void;
     enhanceBeforeSend?: EnhanceDataBeforeSend;
 
+    defaultValues?: DefaultValues<Record<string, unknown>>;
+    authorized?: boolean;
     invalidate?: string | string[];
     requestParams?: Omit<RequestInit, 'body' | 'method'>;
 }
@@ -39,12 +41,14 @@ const AdminForm = ({
     onSuccess,
     onError,
     enhanceBeforeSend,
+    defaultValues,
 
+    authorized=false,
     requestParams={},
 }: AdminFormProps) => {
     const history = useHistory();
 
-    const formApi = useForm();
+    const formApi = useForm({defaultValues});
     const {handleSubmit} = formApi;
 
     const {request} = useAdminContext();
@@ -57,21 +61,28 @@ const AdminForm = ({
         const data = prepareData(values);
 
         try {
-            await request(
+            const res = await request(
                 action,
                 {
                     method,
                     body: JSON.stringify(data),
+                    authenticate: authorized,
+                    credentials: 'include',
                     ...requestParams,
                 },
             );
+            const {status} = res;
 
-            onSuccess?.();
+            if (status < 400) {
+                onSuccess?.();
 
-            redirectTo && history.push(redirectTo);
-            invalidate && queryClient.invalidateQueries(invalidate);
+                redirectTo && history.push(redirectTo);
+                invalidate && queryClient.invalidateQueries(invalidate);
+            } else {
+                onError?.(status);
+            }
         } catch (e) {
-            onError?.(e);
+            onError?.(500);
         }
     };
 

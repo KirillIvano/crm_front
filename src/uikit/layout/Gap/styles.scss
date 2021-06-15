@@ -1,0 +1,10 @@
+@import 
+
+.vertical {
+    flex: 0 0 $pad0;
+
+    &.xs { flex:  $pad2 }
+    &.sm { height: $pad4 }
+    &.md { height: $pad8 }
+    &.lg { height: $pad16 }
+}

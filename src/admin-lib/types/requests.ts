@@ -5,9 +5,13 @@ export type ResponseType<TData = DefaultResponseData,> = {
     data: TData
 }
 
+export type AdminRequestInit = {
+    authenticate?: boolean;
+} & RequestInit;
+
 export type RequestProvider = <
     TRes extends Record<string, unknown | unknown[]>
 >(
     url: string,
-    options?: RequestInit
+    options?: AdminRequestInit
 ) => Promise<ResponseType<TRes>>;

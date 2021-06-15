@@ -1,38 +1,44 @@
 import {Button, Typography} from 'antd';
 
-import {AdminForm, AdminInput} from '@/admin-lib/components';
+import {AdminForm} from '@/admin-lib/components';
 import {getApiUrl} from '@/utils/getApiUrl';
+import {Input} from '@/uikit';
+
+import {ProductsField} from './../components';
 
 
 const OrderCreate = () => (
-    <AdminForm
-        action={getApiUrl('/order')}
-        method="POST"
-        invalidate={getApiUrl('/order/all')}
-        redirectTo="/order"
-    >
-        <Typography>Создание продукта для категории #</Typography>
-
-        <AdminInput
-            type="number"
-            name="customerId"
-            required
-        />
-
-        <AdminInput
-            type="number"
-            name="userId"
-            required
-        />
-
-        <Button
-            type="primary"
-            htmlType="submit"
+    <div>
+        <AdminForm
+            action={getApiUrl('/order')}
+            method="POST"
+            defaultValues={{items: []}}
+            invalidate={getApiUrl('/order/all')}
+            redirectTo="/order"
         >
-                Подтвердить
-        </Button>
-    </AdminForm>
-);
+            <Typography>Создание заказа</Typography>
 
+            <Input
+                type="number"
+                name="customerId"
+            />
+
+            <Input
+                type="number"
+                name="userId"
+                required
+            />
+
+            <ProductsField name="items" />
+
+            <Button
+                type="primary"
+                htmlType="submit"
+            >
+                Подтвердить
+            </Button>
+        </AdminForm>
+    </div>
+);
 
 export default OrderCreate;

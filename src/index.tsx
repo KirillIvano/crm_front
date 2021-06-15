@@ -7,14 +7,16 @@ import {BrowserRouter} from 'react-router-dom';
 import {Admin} from '@/admin-lib';
 
 import {App} from './App';
-import {request} from './utils/request';
+import {container} from './di/container';
+import {DINames} from './di/keys';
+import {IAuthStore} from './di/interfaces/IAuthStore';
 
-
-const REQUST_PROVIDER = request;
+// TODO: тут конечно стоит по другому подумать
+const authService = container.get(DINames.AUTH_STORE) as IAuthStore;
 
 render(
     <BrowserRouter>
-        <Admin requestProvider={REQUST_PROVIDER}>
+        <Admin requestProvider={authService.request}>
             <App />
         </Admin>
     </BrowserRouter>,
